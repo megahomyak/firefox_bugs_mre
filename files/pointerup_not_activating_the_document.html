@@ -11,7 +11,8 @@
                <code id="user-activation-processing-model:pointertype-2"><a data-x-internal="pointertype" href="https://w3c.github.io/pointerevents/#dom-pointerevent-pointertype">pointerType</a></code> is not "<code>mouse</code>"; or</p></li><li><p>"<code id="user-activation-processing-model:event-touchend"><a data-x-internal="event-touchend" href="https://w3c.github.io/touch-events/#event-touchend">touchend</a></code>".</p></li></ul>
         </blockquote>
         <p>However, Firefox Nightly for Android 132.0a1 (Build #2016045535) is only activating the document <strong>after the second pointerup</strong> instead of the first one.</p>
-        <p>Click on the div below to see it in action</p>
+        <p>You might say it's not a big deal, but it does not allow to, say, play sound when the user presses the button. In my relatively complicated add-on, <a href="https://github.com/megahomyak/pop_the_web">Pop the web</a>, exactly that happens, and the first "pop" is not played.</p>
+        <p>Click on the div below to see it in action. On PC it will be "true" after the first try, on mobile - only after the second.</p>
         <div onpointerup="alert('window.navigator.userActivation.hasBeenActive = ' + window.navigator.userActivation.hasBeenActive)" style="width: 100px; height: 100px; background-color: red"></div>
     </body>
 </html>
