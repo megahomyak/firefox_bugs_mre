@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <h1>Pointerup not activating the document (applicable to Firefox for mobile devices)</h1>
+        <p><a href="https://www.w3.org/TR/html51/editing.html">https://www.w3.org/TR/html51/editing.html</a> (redirects to <a href="https://html.spec.whatwg.org/multipage/interaction.html">https://html.spec.whatwg.org/multipage/interaction.html</a> as of <time datetime="2024-09-22">2024.09.22</time>) states the following:</p>
+        <blockquote cite="https://html.spec.whatwg.org/multipage/interaction.html#user-activation-processing-model">
+            <p>An <dfn id="activation-triggering-input-event">activation triggering input event</dfn> is any event whose <code id="user-activation-processing-model:dom-event-istrusted"><a data-x-internal="dom-event-istrusted" href="https://dom.spec.whatwg.org/#dom-event-istrusted">isTrusted</a></code> attribute is true and whose <code id="user-activation-processing-model:dom-event-type"><a data-x-internal="dom-event-type" href="https://dom.spec.whatwg.org/#dom-event-type">type</a></code> is one of:</p>
+            <ul><li><p>"<code id="user-activation-processing-model:event-keydown"><a data-x-internal="event-keydown" href="https://w3c.github.io/uievents/#event-type-keydown">keydown</a></code>", provided the key is neither the
+               <kbd>Esc</kbd> key nor a shortcut key reserved by the user agent;</p></li><li><p>"<code id="user-activation-processing-model:event-mousedown"><a data-x-internal="event-mousedown" href="https://w3c.github.io/uievents/#event-type-mousedown">mousedown</a></code>";</p></li><li><p>"<code id="user-activation-processing-model:event-pointerdown"><a data-x-internal="event-pointerdown" href="https://w3c.github.io/pointerevents/#the-pointerdown-event">pointerdown</a></code>", provided the event's
+               <code id="user-activation-processing-model:pointertype"><a data-x-internal="pointertype" href="https://w3c.github.io/pointerevents/#dom-pointerevent-pointertype">pointerType</a></code> is "<code>mouse</code>";</p></li><li><p>"<code id="user-activation-processing-model:event-pointerup"><a data-x-internal="event-pointerup" href="https://w3c.github.io/pointerevents/#the-pointerup-event">pointerup</a></code>", provided the event's
+               <code id="user-activation-processing-model:pointertype-2"><a data-x-internal="pointertype" href="https://w3c.github.io/pointerevents/#dom-pointerevent-pointertype">pointerType</a></code> is not "<code>mouse</code>"; or</p></li><li><p>"<code id="user-activation-processing-model:event-touchend"><a data-x-internal="event-touchend" href="https://w3c.github.io/touch-events/#event-touchend">touchend</a></code>".</p></li></ul>
+        </blockquote>
+        <p>However, Firefox Nightly for Android 132.0a1 (Build #2016045535) is only activating the document <strong>after the second pointerup</strong> instead of the first one.</p>
+        <p>Click on the div below to see it in action</p>
+        <div onpointerup="alert('window.navigator.userActivation.hasBeenActive = ' + window.navigator.userActivation.hasBeenActive)" style="width: 100px; height: 100px; background-color: red"></div>
+    </body>
+</html>
