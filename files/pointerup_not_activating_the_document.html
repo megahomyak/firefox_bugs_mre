@@ -12,8 +12,41 @@
         </blockquote>
         <p>However, Firefox Nightly for Android 132.0a1 (Build #2016045535) or Firefox for Android 130.0.1 (Build #2016044751) is only activating the document <strong>after the second pointerup</strong> instead of the first one.</p>
         <p>You might say it's not a big deal, but it does not allow to, say, play sound when the user presses a button. In my relatively complicated add-on, <a href="https://github.com/megahomyak/pop_the_web">Pop the web</a>, exactly that happens, and the first "pop" is not played.</p>
-        <p>Update from <time datetime="2024-09-23">2024.09.23</time>: I just realized why it does activate on PC: it activates on mousedown/{pointerdown pointerType="mouse"}, so it probably has to do with the activation not being immediate, i.e. the page is activated only after the handler code runs. Is this intended behavior? To me it still seems a little weird, because it will prevent website creators from playing sounds on a button press when it's the first button press</p>
         <p>Refresh the page to reset all accidental activations and click on the div below to see the bug in action. On PC the value will be "true" after the first try, on mobile - only after the second.</p>
-        <div onpointerup="alert('window.navigator.userActivation.hasBeenActive = ' + window.navigator.userActivation.hasBeenActive)" style="width: 100px; height: 100px; background-color: red"></div>
+        <pre id="pointerupresults" style="background-color: lightgray; color: darkred"></pre>
+        <div id="pointerupdiv" style="width: 100px; height: 100px; background-color: red"></div>
+        <p>Update from <time datetime="2024-09-23">2024.09.23</time> (from my comment): I just realized why it does activate on PC: it activates on mousedown/{pointerdown pointerType="mouse"}, so it probably has to do with the activation not being immediate, i.e. the page is activated only after the handler code runs. Is this intended behavior? To me it still seems a little weird, because it will prevent website creators from playing sounds on a button press when it's the first button press</p>
+        <p>Here's a test for <em>pointerdown</em> if your pointing device is a mouse. It does make the page activate, which is, I believe, hinting that this is indeed a bug:</p>
+        <pre id="pointerdownresults" style="background-color: lightgray; color: darkgreen"></pre>
+        <div id="pointerdowndiv" style="width: 100px; height: 100px; background-color: green"></div>
+        <script>
+            function addListeners(elementId, eventName, resultsId) {
+                let results = document.getElementById(resultsId);
+                function addLineToResults(text) {
+                    results.textContent += `* ${text}; window.navigator.userActivation.hasBeenActive = ${window.navigator.userActivation.hasBeenActive}\n`;
+                }
+                let target = document.getElementById(elementId);
+                // In the following lines I am adding handlers from the spec, showing parameters that are stated in the spec
+                // Registering keydown, which should have event.key != {ESC or a browser shortcut}
+                target.addEventListener("keydown", event => {
+                    addLineToResults(`event.type = ${event.type}; event.key = ${event.key}`);
+                });
+                // Registering mousedown and touchend (they have no constraints)
+                ["mousedown", "touchend"].forEach(eventName => {
+                    target.addEventListener(eventName, event => {
+                        addLineToResults(`event.type = ${event.type}`);
+                    });
+                });
+                // Registering pointerdown (pointerType == "mouse") and pointerup (pointerType != "mouse")
+                ["pointerdown", "pointerup"].forEach(eventName => {
+                    target.addEventListener(eventName, event => {
+                        addLineToResults(`event.type = ${event.type}; event.pointerType = ${event.pointerType}`);
+                    });
+                });
+            }
+
+            addListeners("pointerupdiv", "pointerup", "pointerupresults");
+            addListeners("pointerdowndiv", "pointerdown", "pointerdownresults");
+        </script>
     </body>
 </html>
